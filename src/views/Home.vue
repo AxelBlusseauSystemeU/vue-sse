@@ -1,18 +1,28 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <p>{{datas}}</p>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
 export default {
   name: 'Home',
-  components: {
-    HelloWorld
+  data: function() {
+    return {
+       datas: undefined
+    };
+  },
+  created() {
+    this.setupStream();
+  },
+  methods: {
+    setupStream(){
+      let es = new EventSource('http://localhost:8080/stream-sse')
+      es.addEventListener('periodic-event', event => {
+        this.datas = event.data;
+      }, false)
+    }
   }
+
 }
 </script>
